@@ -1,0 +1,698 @@
+module finalproject(clk, rows, LEDs, columns, signalout, ss1, ss2, ss3, ss4, ss5, ss6);
+
+input [3:0] rows; 
+input clk;
+output [9:0] LEDs;
+output [3:0] columns;
+output signalout;
+output reg [6:0] ss1, ss2, ss3, ss4, ss5, ss6;
+
+rotatingdisplay rd(.clk(clk), .ss1(ss1), .ss2(ss2), .ss3(ss3), .ss4(ss4), .ss5(ss5), .ss6(ss6));
+keypadwithtones kwt(.rows(rows), .clk(clk), .LEDs(LEDs), .columns(columns), .signalout(signalout)); 
+
+endmodule
+
+
+module rotatingdisplay(clk, ss1, ss2, ss3, ss4, ss5, ss6);
+
+input clk;
+output reg [6:0] ss1, ss2, ss3, ss4, ss5, ss6;
+reg [4:0] progress;
+
+initial begin
+ss1, ss2, ss3, ss4, ss5, ss6 = 7'b1111111;
+progress = 5'b00000;
+end
+
+always @(posedge clk) begin
+case(progress)
+
+5'b00000: begin //g
+ss1 = 7'b0010000;
+progress = 5'b00001;
+end
+
+5'b00001: begin //ge
+ss2 = 7'b0010000;
+ss1 = 7'b0000110;
+progress = 5'b00010;
+end
+
+5'b00010: begin //ger
+ss3 = 7'b0010000;
+ss2 = 7'b0000110;
+ss1 = 7'b1001110;
+progress = 5'b00011;
+end
+
+5'b00011: begin //gerr
+ss4 = 7'b0010000;
+ss3 = 7'b0000110;
+ss2 = 7'b1001110;
+ss1 = 7'b1001110;
+progress = 5'b00100;
+end
+
+5'b00100: begin //gerri
+ss5 = 7'b0010000;
+ss4 = 7'b0000110;
+ss3 = 7'b1001110;
+ss2 = 7'b1001110;
+ss1 = 7'b1111001;
+progress = 5'b00101;
+end
+
+5'b00101: begin //gerrif
+ss6 = 7'b0010000;
+ss5 = 7'b0000110;
+ss4 = 7'b1001110;
+ss3 = 7'b1001110;
+ss2 = 7'b1111001;
+ss1 = 7'b0001110;
+progress = 5'b00110;
+end
+
+5'b00110: begin //errifo
+ss6 = 7'b0000110;
+ss5 = 7'b1001110;
+ss4 = 7'b1001110;
+ss3 = 7'b1111001;
+ss2 = 7'b0001110;
+ss1 = 7'b1000000;
+progress = 5'b00111;
+end
+
+5'b00111: begin //rrifox
+ss6 = 7'b1001110;
+ss5 = 7'b1001110;
+ss4 = 7'b1111001;
+ss3 = 7'b0001110;
+ss2 = 7'b1000000;
+ss1 = 7'b0001001;
+progress = 5'b01000;
+end
+
+5'b01000: begin //rifoxf
+ss6 = 7'b1001110;
+ss5 = 7'b1111001;
+ss4 = 7'b0001110;
+ss3 = 7'b1000000;
+ss2 = 7'b0001001;
+ss1 = 7'b0001110;
+progress = 5'b01001;
+end
+
+5'b01001: begin //ifoxfa
+ss6 = 7'b1111001;
+ss5 = 7'b0001110;
+ss4 = 7'b1000000;
+ss3 = 7'b0001001;
+ss2 = 7'b0001110;
+ss1 = 7'b0001000;
+progress = 5'b01010;
+end
+
+5'b01010: begin //foxfal
+ss6 = 7'b0001110;
+ss5 = 7'b1000000;
+ss4 = 7'b0001001;
+ss3 = 7'b0001110;
+ss2 = 7'b0001000;
+ss1 = 7'b1000111;
+progress = 5'b01011;
+end
+
+5'b01011: begin //oxfall
+ss6 = 7'b1000000;
+ss5 = 7'b0001001;
+ss4 = 7'b0001110;
+ss3 = 7'b0001000;
+ss2 = 7'b1000111;
+ss1 = 7'b1000111;
+progress = 5'b01100;
+end
+
+5'b01100: begin //xfall2
+ss6 = 7'b0001001;
+ss5 = 7'b0001110;
+ss4 = 7'b0001000;
+ss3 = 7'b1000111;
+ss2 = 7'b1000111;
+ss1 = 7'b0100100;
+progress = 5'b01101;
+end
+
+5'b01101: begin //fall20
+ss6 = 7'b0001110;
+ss5 = 7'b0001000;
+ss4 = 7'b1000111;
+ss3 = 7'b1000111;
+ss2 = 7'b0100100;
+ss1 = 7'b1000000;
+progress = 5'b01110;
+end
+
+5'b01110: begin //all202
+ss6 = 7'b0001000;
+ss5 = 7'b1000111;
+ss4 = 7'b1000111;
+ss3 = 7'b0100100;
+ss2 = 7'b1000000;
+ss1 = 7'b0100100;
+progress = 5'b01111;
+end
+
+5'b01111: begin //ll2020
+ss6 = 7'b1000111;
+ss5 = 7'b1000111;
+ss4 = 7'b0100100;
+ss3 = 7'b1000000;
+ss2 = 7'b0100100;
+ss1 = 7'b1000000;
+progress = 5'b10000;
+end
+
+5'b10000: begin //l2020g
+ss6 = 7'b1000111;
+ss5 = 7'b0100100;
+ss4 = 7'b1000000;
+ss3 = 7'b0100100;
+ss2 = 7'b1000000;
+ss1 = 7'b0010000;
+progress = 5'b10001;
+end
+
+5'b10001: begin //2020ge
+ss6 = 7'b0100100;
+ss5 = 7'b1000000;
+ss4 = 7'b0100100;
+ss3 = 7'b1000000;
+ss2 = 7'b0010000;
+ss1 = 7'b0000110;
+progress = 5'b10010;
+end
+
+5'b10010: begin //020ger
+ss6 = 7'b1000000;
+ss5 = 7'b0100100;
+ss4 = 7'b1000000;
+ss3 = 7'b0010000;
+ss2 = 7'b0000110;
+ss1 = 7'b1001110;
+progress = 5'b10011;
+end
+
+5'b10011: begin //20gerr
+ss6 = 7'b0100100;
+ss5 = 7'b1000000;
+ss4 = 7'b0010000;
+ss3 = 7'b0000110;
+ss2 = 7'b1001110;
+ss1 = 7'b1001110;
+progress = 5'b10100;
+end
+
+5'b10100: begin //0gerri
+ss6 = 7'b1000000;
+ss5 = 7'b0010000;
+ss4 = 7'b0000110;
+ss3 = 7'b1001110;
+ss2 = 7'b1001110;
+ss1 = 7'b1111001;
+progress = 5'b00101; //back to gerri to keep rotating 
+end
+
+
+endcase 
+end
+endmodule
+
+module keypad(rows, clk, LEDs, columns);
+
+input [3:0] rows; 
+input clk;
+output [9:0] LEDs;
+output [3:0] columns;
+reg [4:0] progress, button; //progress for which button is pressed 
+reg [31:0] counter; //counter for clock
+reg val1, val2; //value of buttons
+
+
+initial begin  
+LEDs = 8'b0000_0000;  //bits to output to leds 
+progress = 3'b000; //progress of where in program
+counter = 0; //counter for time
+end  
+
+always @(posedge clk) begin     
+case(progress)     
+
+default: progress = 3'b000;  //start at beginning
+   
+3'b000: begin                   
+counter = counter + 1'b1;      //increment counter              
+	if (counter >= 10) begin                        
+	progress = 3'b001;   //go to next case                      
+	val1 = button;    //read val1                    
+	counter = 0;  //reset counter                   
+	end                       
+ end 
+ 
+ 3'b001: begin                   
+ counter = counter + 1'b1;    //increment counter                 
+	if (counter >= 500000) begin  //wait 10 ms before reading the switch again                       
+	progress = 3'b010;  //go to next case                        
+	val2 = button;   //read val2                      
+	counter = 0;  //reset counter                 
+	end                     
+ end    
+ 
+ 3'b010: begin 
+    if ((val1 == val2) && (val1 == 1)) begin  
+	 
+	 case(button)
+	
+	4'b0001: begin //1
+	LEDs = LEDs + 1'b1;
+	end
+		  
+	4'b0010: begin //2
+	LEDs = LEDs + 2'b10;
+	end
+		  
+	4'b0011: begin //3
+	LEDs = LEDs + 2'b11;
+	end
+		  
+	4'b0100: begin //4
+	LEDs = LEDs + 3'b100;
+	end
+		  
+	4'b0101: begin //5
+	LEDs = LEDs + 3'b101;
+	end
+	
+	4'b0110: begin //6
+	LEDs = LEDs + 3'b110;
+	end
+	
+	4'b0111: begin //7
+	LEDs = LEDs + 3'b111;
+	end
+	
+	4'b1000: begin //8
+	LEDs = LEDs + 4'b1000;
+	end
+	
+	4'b1001: begin //9
+	LEDs = LEDs + 4'b1001;
+	end
+	
+	4'b1010: begin //10
+	LEDs = LEDs + 4'b1010;
+	end
+	
+	4'b1011: begin //11
+	LEDs = LEDs + 4'b1011;
+	end
+	
+	4'b1100: begin //12
+	LEDs = LEDs + 4'b1100;
+	end
+	
+	4'b1101: begin //13
+	LEDs = LEDs + 4'b1101;
+	end
+	
+	4'b1110: begin //14
+	LEDs = LEDs + 4'b1110;
+	end
+	
+	4'b1111: begin //15
+	LEDs = LEDs + 4'b1111;
+	end
+
+	endcase
+	 progress = 3'b011; //go to next case
+	 end 
+	 
+	 else progress = 3'b000;  //dont increment leds and go back to beginning   
+  end   
+ 
+ 3'b011: begin                   
+   counter = counter + 1'b1;    //increment counter                 
+	 if (counter >= 500000) begin  //wait 10 ms before reading the switch                                             
+	 val2 = button;   //read val2    	
+	 counter = 0;  //reset counter    
+	  if (val2 == 0) begin //check if button is being held
+	  progress = 3'b000; //if not go back to beginning
+	  end //if button is being held, then stay in this case until it is released 
+    end                     
+ end    
+ 
+               
+ endcase 
+ end 
+ 
+ endmodule
+ 
+
+
+module keypadwithtones(rows, clk, LEDs, columns, signalout);
+
+input [3:0] rows; 
+input clk;
+output [9:0] LEDs;
+output [3:0] columns;
+output signalout;
+reg [4:0] progress, button; //progress for which button is pressed 
+reg [31:0] counter; //counter for clock
+reg val1, val2; //value of buttons
+
+
+initial begin  
+LEDs = 8'b0000_0000;  //bits to output to leds 
+progress = 3'b000; //progress of where in program
+counter = 0; //counter for time
+end  
+
+always @(posedge clk) begin     
+case(progress)     
+
+default: progress = 3'b000;  //start at beginning
+   
+3'b000: begin                   
+counter = counter + 1'b1;      //increment counter              
+	if (counter >= 10) begin                        
+	progress = 3'b001;   //go to next case                      
+	val1 = button;    //read val1                    
+	counter = 0;  //reset counter                   
+	end                       
+ end 
+ 
+ 3'b001: begin                   
+ counter = counter + 1'b1;    //increment counter                 
+	if (counter >= 500000) begin  //wait 10 ms before reading the switch again                       
+	progress = 3'b010;  //go to next case                        
+	val2 = button;   //read val2                      
+	counter = 0;  //reset counter                 
+	end                     
+ end    
+ 
+ 3'b010: begin 
+    if ((val1 == val2) && (val1 == 1)) begin  
+	 
+	 case(button)
+	
+	default: begin //0 
+			   end
+	
+	4'b0001: begin //1
+	LEDs = LEDs + 1'b1;
+	//C5, 523.25 Hz roughly
+		countlow = 47778;
+		counthigh = 95556;
+	end
+		  
+	4'b0010: begin //2
+	LEDs = LEDs + 2'b10;
+	//D5, 587.33 Hz roughly
+		countlow = 42565;
+		counthigh = 85131;
+	end
+		  
+	4'b0011: begin //3
+	LEDs = LEDs + 2'b11;
+	//E5, 659.26 Hz roughly
+		countlow = 37921;
+		counthigh = 75842;
+	end
+		  
+	4'b0100: begin //4
+	LEDs = LEDs + 3'b100;
+	//F5, 698.46 Hz roughly
+		countlow = 35793;
+		counthigh = 71586;
+	end
+		  
+	4'b0101: begin //5
+	LEDs = LEDs + 3'b101;
+	//G5, 783.99 Hz roughly
+		countlow = 31888;
+		counthigh = 63776;
+	end
+	
+	4'b0110: begin //6
+	LEDs = LEDs + 3'b110;
+	//A5, 880.00 Hz roughly
+		countlow = 28409;
+		counthigh = 56818;
+	end
+	
+	4'b0111: begin //7
+	LEDs = LEDs + 3'b111;
+	//B5, 987.77 Hz roughly
+		countlow = 25390;
+		counthigh = 50619;
+	end
+	
+	4'b1000: begin //8
+	LEDs = LEDs + 4'b1000;
+	//C6, 1046.5 Hz roughly
+		countlow = 23889;
+		counthigh = 47778;
+	end
+	
+	4'b1001: begin //9
+	LEDs = LEDs + 4'b1001;
+	//D6, 1174.7 Hz roughly
+		countlow = 21282;
+		counthigh = 42564;
+	end
+	
+	4'b1010: begin //10
+	LEDs = LEDs + 4'b1010;
+	//E6, 1318.5 Hz roughly
+		countlow = 18960;
+		counthigh = 37921;
+	end
+	
+	4'b1011: begin //11
+	LEDs = LEDs + 4'b1011;
+	//F6, 1396.9 Hz roughly
+		countlow = 17896;
+		counthigh = 35793;
+	end
+	
+	4'b1100: begin //12
+	LEDs = LEDs + 4'b1100;
+	//G6, 1568.0 Hz roughly
+		countlow = 15943;
+		counthigh = 31887;
+	end
+	
+	4'b1101: begin //13
+	LEDs = LEDs + 4'b1101;
+	//A6, 1760 Hz roughly
+		countlow = 14204;
+		counthigh = 28409;
+	end
+	
+	4'b1110: begin //14
+	LEDs = LEDs + 4'b1110;
+	//B6, 1976 Hz rougly
+		countlow = 12651;
+		counthigh = 25303;
+	end
+	
+	4'b1111: begin //15
+	LEDs = LEDs + 4'b1111;
+	//C7, 2093 Hz rougly 
+		countlow = 11944;
+		counthigh = 23889;
+	end
+
+	endcase
+	 progress = 3'b011; //go to next case
+	 toneprocessor tp(.clk(clk), .countlow(countlow), .counthigh(counthight), .signalout(signalout);
+	 end 
+	 
+	 else progress = 3'b000;  //dont increment leds and go back to beginning   
+  end   
+ 
+ 3'b011: begin                   
+   counter = counter + 1'b1;    //increment counter                 
+	 if (counter >= 500000) begin  //wait 10 ms before reading the switch                                             
+	 val2 = button;   //read val2    	
+	 counter = 0;  //reset counter    
+	  if (val2 == 0) begin //check if button is being held
+	  progress = 3'b000; //if not go back to beginning
+	  end //if button is being held, then stay in this case until it is released  
+	toneprocessor tp(.clk(clk), .countlow(countlow), .counthigh(counthight), .signalout(signalout); //continue tone
+ end    
+ 
+               
+ endcase 
+ end 
+ 
+ endmodule
+	
+module toneprocessor(clk, countlow, counthigh, signalout);
+
+output signalout;
+reg signalout;
+input clk;
+input [31:0] countlow, counthigh;
+reg [31:0] onesecond, mycounter;
+reg [3:0] progress;
+
+initial begin
+signalout=0; //initialize signalout to 0
+onesecond = 100000000; //represents 1 second
+mycounter = 0; //counter for which region
+progress = 4'b0000; //progress of which region we are in
+end
+
+always@(posedge clk) begin
+case(progress)
+
+default: begin              
+			end
+
+4'b0000: begin
+// Region 1
+	mycounter = mycounter + 1'b1; //increase counter for region by 1
+	if (mycounter < countlow) begin //if counter is less than countlow
+	signalout = 0; //set signal to 0
+	end
+	else begin
+	progress = 4'b0001; //set progress to region 2
+	end
+end
+
+4'b0001: begin
+//Region 2
+	mycounter = mycounter + 1'b1; //increase counter for region by 1
+	//if counter is equal to or greater than countlow and less than counthigh
+	if ((mycounter >= countlow) && (mycounter < counthigh)) begin 
+	signalout = 1; //set signal to 1
+	end
+	else begin
+	progress = 4'b0010; //set progress to region 3
+	end
+end
+
+4'b0010: begin
+//Region 3
+	mycounter = mycounter + 1'b1; //increase counter for region by 1
+	if (mycounter >= counthigh) begin //if counter is greater than or equal to counthigh
+	signalout = 0; //set signal to 0
+	mycounter = 0; //restart counter
+	end
+	else begin
+	progress = 4'b0000; //set progress to region 1
+	end
+
+end
+
+endcase
+end
+endmodule
+
+
+
+
+module switchdebouncer(button, clk, LEDs, sevensegment);
+
+input  button; //button
+input  clk; //clock
+output [6:0] sevensegment; //seven segment display 
+reg [6:0] sevensegment; //seven segment
+reg [3:0] ssprogress; //seven segment progress 
+output [7:0] LEDs; //leds 
+reg [7:0] LEDs; //leds 
+reg [3:0] progress; //progress of cases
+reg [31:0] counter; //counter for clock
+reg val1, val2; //value of buttons
+
+initial begin  
+LEDs = 8'b0000_0000;  //bits to output to leds
+sevensegment = 7'b1111111; //seven segment initially blank 
+progress = 3'b000; //progress of where in program
+ssprogress = 3'b000; //progress for sevensegment display
+counter = 0; //counter for time
+end  
+
+always @(posedge clk) begin     
+case(progress)     
+
+default: progress = 3'b000;  //start at beginning
+   
+3'b000: begin                   
+counter = counter + 1'b1;      //increment counter              
+	if (counter >= 10) begin                        
+	progress = 3'b001;   //go to next case                      
+	val1 = button;    //read val1                    
+	counter = 0;  //reset counter                   
+	end                       
+ end 
+ 
+ 3'b001: begin                   
+ counter = counter + 1'b1;    //increment counter                 
+	if (counter >= 500000) begin  //wait 10 ms before reading the switch again                       
+	progress = 3'b010;  //go to next case                        
+	val2 = button;   //read val2                      
+	counter = 0;  //reset counter                 
+	end                     
+ end    
+ 
+ 3'b010: begin 
+    if ((val1 == val2) && (val1 == 1)) begin  
+	LEDs = LEDs + 1'b1; //increment leds by 1 	 
+	 case(ssprogress) //case for seven segment 
+			
+	3'b000: begin //g
+	sevensegment = 7'b0010000;
+	end
+		  
+	3'b001: begin //e
+	sevensegment = 7'b0000110;
+	end
+		  
+	3'b010: begin //r
+	sevensegment = 7'b1001110;
+	end
+		  
+	3'b011: begin //r
+	sevensegment = 7'b1001110;
+	end
+		  
+	3'b100: begin //i
+	sevensegment = 7'b1111001;
+	end
+
+	endcase
+
+	 progress = 3'b011; //go to next case
+	 end 
+	 
+	 else progress = 3'b000;  //dont increment leds and go back to beginning   
+  end   
+ 
+ 3'b011: begin                   
+   counter = counter + 1'b1;    //increment counter                 
+	 if (counter >= 500000) begin  //wait 10 ms before reading the switch                                             
+	 val2 = button;   //read val2    	
+	 counter = 0;  //reset counter    
+	  if (val2 == 0) begin //check if button is being held
+	  progress = 3'b000; //if not go back to beginning
+	  end //if button is being held, then stay in this case until it is released 
+    end                     
+ end    
+ 
+               
+ endcase 
+ end 
+ 
+ endmodule
+ 
